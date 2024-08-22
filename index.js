@@ -137,7 +137,42 @@ app.get("/list-customer",(req,res)=>{
 
 })
 
-//list how many times customer booked a room
+//list how many times individual customer booked a room
+
+app.get("/customer-booking-count", (req, res) => {
+    const bookingCounts = book_room.reduce((acc, booking) => {
+        acc[booking.cus_name] = (acc[booking.cus_name] || 0) + 1;
+        return acc;
+    }, {});
+
+    const customerBookingCounts = Object.entries(bookingCounts).map(([cus_name, count]) => ({
+        cus_name,
+        booking_count: count
+    }));
+
+    res.json({ message: "Customer booking counts", customerBookingCounts });
+});
+
+// app.get("/customer-booking-count", (req, res) => {
+//     const bookingCounts = {};
+
+//     book_room.forEach((booking) => {
+//         if (bookingCounts[booking.cus_name]) {
+//             bookingCounts[booking.cus_name]++;
+//         } else {
+//             bookingCounts[booking.cus_name] = 1;
+//         }
+//     });
+
+//     const customerBookingCounts = Object.entries(bookingCounts).map(([cus_name, count]) => ({
+//         cus_name,
+//         booking_count: count
+//     }));
+
+//     res.json({ message: "Customer booking counts", customerBookingCounts });
+// });
+
+
 app.get("/customer-booked",(req,res)=>{
     var list_customer=[];
     rooms.map((x)=>{
